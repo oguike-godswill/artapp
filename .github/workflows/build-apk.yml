@@ -1,0 +1,68 @@
+name: Build & Release Android APK
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    name: Build Android Release APK
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set up Java 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+          cache: true
+
+      - name: Get Dependencies
+        working-directory: ./app
+        run: flutter pub get
+
+      - name: Build APK
+        working-directory: ./app
+        run: flutter build apk --release
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: solis-app-release
+          path: app/build/app/outputs/flutter-apk/app-release.apk
+
+      - name: Publish GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v1.0.0
+          name: Solis Art App v1.0.0
+          draft: false
+          prerelease: false
+          body: |
+            ### 🎨 Solis Mobile App (Android APK)
+
+            Directly installable APK for Android devices.
+
+            #### Features:
+            - **Interactive 3D Museum Pavilion Map** (rotatable isometric 3D projection)
+            - **3D Holographic Collector Card** with dynamic tilt, specular sheen & 180° flip
+            - **3D Curated Art Quiz** (Discover your collector aesthetic)
+            - **Live Real-time WebSocket Bidding** & VIP Bidder Paddle
+            - **Curator Audio Guide** with real audio & 24-bar waveform equalizer
+            - **Impasto Texture Zoom** & Virtual "View on Wall" 3D room simulator
+            - **Digital Event Tickets** with QR pass and calendar sync
+          files: app/build/app/outputs/flutter-apk/app-release.apk
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
