@@ -67,17 +67,18 @@ class ApiClient {
     final uri = Uri.parse('${AppConfig.apiUrl}/api$path');
     final req = http.Request(method, uri)
       ..headers['Content-Type'] = 'application/json'
-      ..headers['Accept'] = 'application/json';
+      ..headers['Accept'] = 'application/json'
+      ..headers['Bypass-Tunnel-Reminder'] = 'true';
     if (_access != null) req.headers['Authorization'] = 'Bearer $_access';
     if (body != null) req.body = jsonEncode(body);
 
     http.Response res;
     try {
-      res = await http.Response.fromStream(await _http.send(req).timeout(const Duration(seconds: 20)));
+      res = await http.Response.fromStream(await _http.send(req).timeout(const Duration(seconds: 15)));
     } on TimeoutException {
-      throw ApiException(0, 'The server took too long to respond.');
+      throw ApiException(0, 'Connection timed out (${AppConfig.apiUrl}). Tap server settings to configure.');
     } catch (_) {
-      throw ApiException(0, 'Can\'t reach Solis. Check your connection.');
+      throw ApiException(0, 'Cannot reach server at ${AppConfig.apiUrl}. Check connection or change server.');
     }
 
     if (res.statusCode == 401 && !retried && _refresh != null && !path.startsWith('/auth/')) {
@@ -109,8 +110,8 @@ class ApiClient {
     try {
       final res = await _http
           .post(Uri.parse('${AppConfig.apiUrl}/api/auth/refresh'),
-              headers: {'Content-Type': 'application/json'}, body: jsonEncode({'refreshToken': rt}))
-          .timeout(const Duration(seconds: 20));
+              headers: {'Content-Type': 'application/json', 'Bypass-Tunnel-Reminder': 'true'}, body: jsonEncode({'refreshToken': rt}))
+          .timeout(const Duration(seconds: 15));
       if (res.statusCode == 200) {
         final d = jsonDecode(res.body) as Map<String, dynamic>;
         await saveTokens(d['accessToken'] as String, d['refreshToken'] as String);

@@ -41,6 +41,7 @@ class ArtImage extends StatelessWidget {
         ? placeholder
         : CachedNetworkImage(
             imageUrl: url,
+            httpHeaders: const {'Bypass-Tunnel-Reminder': 'true'},
             fit: fit,
             fadeInDuration: const Duration(milliseconds: 250),
             placeholder: (_, __) => placeholder,

@@ -46,23 +46,21 @@ jobs:
       - name: Publish GitHub Release
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: v1.0.0
-          name: Solis Art App v1.0.0
+          tag_name: v1.0.1
+          name: Solis Art App v1.0.1 (Android Connectivity & Auth Fix)
           draft: false
           prerelease: false
           body: |
-            ### 🎨 Solis Mobile App (Android APK)
+            ### 🎨 Solis Mobile App v1.0.1 (Android APK)
 
             Directly installable APK for Android devices.
 
-            #### Features:
-            - **Interactive 3D Museum Pavilion Map** (rotatable isometric 3D projection)
-            - **3D Holographic Collector Card** with dynamic tilt, specular sheen & 180° flip
-            - **3D Curated Art Quiz** (Discover your collector aesthetic)
-            - **Live Real-time WebSocket Bidding** & VIP Bidder Paddle
-            - **Curator Audio Guide** with real audio & 24-bar waveform equalizer
-            - **Impasto Texture Zoom** & Virtual "View on Wall" 3D room simulator
-            - **Digital Event Tickets** with QR pass and calendar sync
+            #### What's New in v1.0.1:
+            - **Seamless Android Connectivity**: Solis now defaults to a high-speed cloud endpoint for real physical devices, avoiding emulator timeout errors.
+            - **Server Connection Manager**: Interactive bottom sheet on Welcome, Login, and Profile screens to test ping and switch between Cloud Tunnel, Local Wi-Fi (`192.168.100.25`), Emulator (`10.0.2.2`), and custom hosts.
+            - **Instant Authentication & Error Recovery**: 15s timeout with direct in-app recovery button if server is unreachable.
+            - **Bypass Headers**: Transparent bypass for tunnel security prompts.
+            - **Interactive 3D Pavilion Map, Holographic Card, Live WebSocket Bidding, & Audio Guide**.
           files: app/build/app/outputs/flutter-apk/app-release.apk
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -1,18 +1,50 @@
 import 'package:flutter/cupertino.dart' show CupertinoPageTransitionsBuilder;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class AppConfig {
   /// Override with: flutter run --dart-define=API_URL=http://192.168.1.10:4000
   static const _fromEnv = String.fromEnvironment('API_URL');
+  static const _storageKey = 'solis_server_url';
+  static const _storage = FlutterSecureStorage();
+
+  static String? _customUrl;
+
+  static const String publicTunnelUrl = 'https://solis-artapp.loca.lt';
+  static const String lanWifiUrl = 'http://192.168.100.25:4000';
+  static const String emulatorUrl = 'http://10.0.2.2:4000';
+  static const String localhostUrl = 'http://localhost:4000';
+
+  static Future<void> init() async {
+    try {
+      _customUrl = await _storage.read(key: _storageKey);
+    } catch (_) {}
+  }
+
+  static Future<void> setCustomUrl(String? url) async {
+    final cleaned = url?.trim();
+    if (cleaned == null || cleaned.isEmpty) {
+      _customUrl = null;
+      try {
+        await _storage.delete(key: _storageKey);
+      } catch (_) {}
+    } else {
+      final formatted = cleaned.endsWith('/') ? cleaned.substring(0, cleaned.length - 1) : cleaned;
+      _customUrl = formatted;
+      try {
+        await _storage.write(key: _storageKey, value: formatted);
+      } catch (_) {}
+    }
+  }
 
   static String get apiUrl {
+    if (_customUrl != null && _customUrl!.isNotEmpty) return _customUrl!;
     if (_fromEnv.isNotEmpty) return _fromEnv;
-    if (!kIsWeb && defaultTargetPlatform == TargetPlatform.android) {
-      return 'http://10.0.2.2:4000'; // Android emulator -> host machine
-    }
-    return 'http://localhost:4000';
+    if (kIsWeb) return localhostUrl;
+    // On Android & iOS devices: default to the cloud tunnel so auth & data work out of the box anywhere!
+    return publicTunnelUrl;
   }
 
   static String asset(String? path) {

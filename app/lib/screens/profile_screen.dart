@@ -8,6 +8,7 @@ import '../models.dart';
 import '../theme.dart';
 import '../widgets.dart';
 import '../widgets/bidder_paddle_dialog.dart';
+import '../widgets/server_config_sheet.dart';
 import 'aesthetic_quiz_screen.dart';
 import 'auction_screens.dart';
 import 'collection_screen.dart';
@@ -274,6 +275,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 ),
                               ),
                             const SizedBox(height: 30),
+                            OutlinedButton.icon(
+                              style: OutlinedButton.styleFrom(
+                                minimumSize: const Size.fromHeight(48),
+                                shape: const StadiumBorder(),
+                                side: const BorderSide(color: Solis.line),
+                                foregroundColor: Solis.inkSoft,
+                              ),
+                              icon: const Icon(Icons.dns_outlined, size: 18),
+                              label: Text('Server: ${AppConfig.apiUrl}', maxLines: 1, overflow: TextOverflow.ellipsis),
+                              onPressed: () => showServerConfigSheet(context, onSaved: () => setState(() {})),
+                            ),
+                            const SizedBox(height: 12),
                             OutlinedButton.icon(
                               style: OutlinedButton.styleFrom(
                                 minimumSize: const Size.fromHeight(52),

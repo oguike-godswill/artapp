@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import '../auth.dart';
 import '../theme.dart';
 import '../widgets.dart';
+import '../widgets/server_config_sheet.dart';
 
 class SplashScreen extends StatelessWidget {
   const SplashScreen({super.key});
@@ -37,7 +38,31 @@ class WelcomeScreen extends StatelessWidget {
           child: Padding(
             padding: const EdgeInsets.fromLTRB(28, 24, 28, 24),
             child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              Text('SOLIS', style: Solis.serif(22, color: Solis.paper).copyWith(letterSpacing: 8)),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text('SOLIS', style: Solis.serif(22, color: Solis.paper).copyWith(letterSpacing: 8)),
+                  GestureDetector(
+                    onTap: () => showServerConfigSheet(context),
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                      decoration: BoxDecoration(
+                        color: Solis.paper.withValues(alpha: 0.15),
+                        borderRadius: BorderRadius.circular(16),
+                        border: Border.all(color: Solis.paper.withValues(alpha: 0.2)),
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          const Icon(Icons.dns_rounded, size: 13, color: Solis.sun),
+                          const SizedBox(width: 5),
+                          Text('Server', style: Solis.sans(12, color: Solis.paper, weight: FontWeight.w500)),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
               const Spacer(),
               Text('Art, told by hand.', style: Solis.serif(44, color: Solis.paper, height: 1.05)),
               const SizedBox(height: 14),
@@ -121,7 +146,18 @@ class _AuthScreenState extends State<AuthScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(backgroundColor: Solis.paper, surfaceTintColor: Colors.transparent, elevation: 0),
+      appBar: AppBar(
+        backgroundColor: Solis.paper,
+        surfaceTintColor: Colors.transparent,
+        elevation: 0,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.dns_outlined, color: Solis.inkSoft),
+            tooltip: 'Server Connection',
+            onPressed: () => showServerConfigSheet(context, onSaved: () => setState(() {})),
+          ),
+        ],
+      ),
       body: SafeArea(
         child: Form(
           key: _form,
@@ -188,11 +224,29 @@ class _AuthScreenState extends State<AuthScreen> {
                 Container(
                   padding: const EdgeInsets.all(14),
                   decoration: BoxDecoration(color: Solis.rust.withValues(alpha: 0.1), borderRadius: BorderRadius.circular(14)),
-                  child: Row(children: [
-                    const Icon(Icons.error_outline, color: Solis.rust, size: 20),
-                    const SizedBox(width: 10),
-                    Expanded(child: Text(_error!, style: Solis.sans(13.5, color: Solis.rust))),
-                  ]),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(children: [
+                        const Icon(Icons.error_outline, color: Solis.rust, size: 20),
+                        const SizedBox(width: 10),
+                        Expanded(child: Text(_error!, style: Solis.sans(13.5, color: Solis.rust))),
+                      ]),
+                      const SizedBox(height: 8),
+                      InkWell(
+                        onTap: () => showServerConfigSheet(context, onSaved: () => setState(() => _error = null)),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            const Icon(Icons.settings_ethernet, size: 15, color: Solis.teal),
+                            const SizedBox(width: 6),
+                            Text('Change Server Address / Test Ping',
+                                style: Solis.sans(13, color: Solis.teal, weight: FontWeight.w600).copyWith(decoration: TextDecoration.underline)),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ],
               const SizedBox(height: 28),

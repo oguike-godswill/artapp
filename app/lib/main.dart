@@ -10,8 +10,9 @@ import 'theme.dart';
 
 final navigatorKey = GlobalKey<NavigatorState>();
 
-void main() {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await AppConfig.init();
   final api = ApiClient();
   final auth = AuthController(api)..bootstrap();
   // When the session ends (logout / expiry) drop any pushed screens.
