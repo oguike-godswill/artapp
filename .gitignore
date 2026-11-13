@@ -1,0 +1,27 @@
+# Dependencies and environments
+node_modules/
+**/node_modules/
+.env
+**/.env
+.env.local
+.env.*.local
+
+# Flutter / Dart
+.dart_tool/
+**/.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.pub-cache/
+**/.pub-cache/
+.pub/
+**/build/
+build/
+
+# IDE and OS files
+.DS_Store
+Thumbs.db
+*.log
+.idea/
+**/.idea/
+*.iml
+.vscode/
