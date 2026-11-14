@@ -12,7 +12,7 @@ class AppConfig {
 
   static String? _customUrl;
 
-  static const String publicTunnelUrl = 'https://solis-artapp.loca.lt';
+  static const String publicTunnelUrl = 'http://bore.pub:38400';
   static const String lanWifiUrl = 'http://192.168.100.25:4000';
   static const String emulatorUrl = 'http://10.0.2.2:4000';
   static const String localhostUrl = 'http://localhost:4000';

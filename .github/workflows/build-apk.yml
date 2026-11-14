@@ -46,21 +46,19 @@ jobs:
       - name: Publish GitHub Release
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: v1.0.1
-          name: Solis Art App v1.0.1 (Android Connectivity & Auth Fix)
+          tag_name: v1.0.2
+          name: Solis Art App v1.0.2 (Global Cloud Tunnel Default)
           draft: false
           prerelease: false
           body: |
-            ### 🎨 Solis Mobile App v1.0.1 (Android APK)
+            ### 🎨 Solis Mobile App v1.0.2 (Android APK)
 
             Directly installable APK for Android devices.
 
-            #### What's New in v1.0.1:
-            - **Seamless Android Connectivity**: Solis now defaults to a high-speed cloud endpoint for real physical devices, avoiding emulator timeout errors.
-            - **Server Connection Manager**: Interactive bottom sheet on Welcome, Login, and Profile screens to test ping and switch between Cloud Tunnel, Local Wi-Fi (`192.168.100.25`), Emulator (`10.0.2.2`), and custom hosts.
-            - **Instant Authentication & Error Recovery**: 15s timeout with direct in-app recovery button if server is unreachable.
-            - **Bypass Headers**: Transparent bypass for tunnel security prompts.
-            - **Interactive 3D Pavilion Map, Holographic Card, Live WebSocket Bidding, & Audio Guide**.
+            #### What's New in v1.0.2:
+            - **Global Cloud Tunnel Default (`http://bore.pub:38400`)**: Connect anywhere from cellular (4G/5G) or any outside Wi-Fi network with zero latency and no local configuration required.
+            - **Seamless Authentication**: Login and registration work out of the box anywhere.
+            - **Server Connection Manager**: Switch endpoints anytime between Global Cloud, Local Wi-Fi, and Emulator with live ping test.
           files: app/build/app/outputs/flutter-apk/app-release.apk
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
